@@ -23,5 +23,5 @@ RUN ln -s /opt/mesos-0.18.0 /opt/mesos
 RUN mkdir /opt/mesos/build
 RUN sh -c "cd /opt/mesos/build && ../configure"
 RUN sh -c "cd /opt/mesos/build && make"
-RUN sh -c "cd /opt/mesos/build && make test"
+RUN sh -c "cd /opt/mesos/build && make check"
 RUN sh -c "cd /opt/mesos/build && make install"
