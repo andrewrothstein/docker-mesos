@@ -1,1 +1,1 @@
-Containers with all of the built Apache Mesos applications## Mesos Dockerfile
+A container full of mesos
