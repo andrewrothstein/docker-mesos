@@ -1,18 +1,30 @@
-FROM ubuntu:trusty
+FROM ubuntu:14.04
 
 MAINTAINER "Andrew Rothstein" andrew.rothstein@gmail.com
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y default-jre python-setuptools python-protobuf curl libsvn1
+ENV GIT_VER=master MESOS_BUILD_ROOT=/build/mesos
 
-RUN curl -sSfL \
- http://downloads.mesosphere.io/master/ubuntu/14.04/mesos_0.21.1-1.1.ubuntu1404_amd64.deb \
- --output /tmp/mesos.deb \
- && dpkg -i /tmp/mesos.deb \
- && rm -f /tmp/mesos.deb
-
-RUN curl -sSfL \
- http://downloads.mesosphere.io/master/ubuntu/14.04/mesos-0.21.1-py2.7-linux-x86_64.egg \
- --output /tmp/mesos.egg \
- && easy_install /tmp/mesos.egg \
- && rm -f /tmp/mesos.egg
+RUN DEBIAN_FRONTEND=noninteractive \
+ apt-get update && \
+ apt-get install -yq \
+  curl \
+  build-essential \
+  autoconf \
+  libtool \
+  zlib1g-dev \
+  libcurl4-nss-dev \
+  libsasl2-dev \
+  openjdk-6-jdk \
+  maven \
+  python-dev \
+  python-boto \
+  libsvn-dev \
+  libapr1-dev && \
+ mkdir -p $MESOS_BUILD_ROOT && \
+ cd $MESOS_BUILD_ROOT && \
+ (curl -L https://github.com/andrewrothstein/mesos/tarball/${GIT_VER} | tar zx) && \
+ ./bootstrap && \
+ mkdir -p $MESOS_BUILD_ROOT/build && \
+ cd $MESOS_BUILD_ROOT/build && \
+ ../configure && make install && \
+ rm -rf $MESOS_BUILD_ROOT
