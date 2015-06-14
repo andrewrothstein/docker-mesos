@@ -2,8 +2,6 @@ FROM ubuntu:14.04
 
 MAINTAINER "Andrew Rothstein" andrew.rothstein@gmail.com
 
-ENV GIT_VER=master MESOS_BUILD_ROOT=/build/mesos
-
 RUN DEBIAN_FRONTEND=noninteractive \
  apt-get update && \
  apt-get install -yq \
@@ -19,12 +17,19 @@ RUN DEBIAN_FRONTEND=noninteractive \
   python-dev \
   python-boto \
   libsvn-dev \
-  libapr1-dev && \
- mkdir -p $MESOS_BUILD_ROOT && \
- cd $MESOS_BUILD_ROOT && \
- (curl -L https://github.com/andrewrothstein/mesos/tarball/${GIT_VER} | tar zx) && \
- ./bootstrap && \
- mkdir -p $MESOS_BUILD_ROOT/build && \
- cd $MESOS_BUILD_ROOT/build && \
- ../configure && make install && \
- rm -rf $MESOS_BUILD_ROOT
+  libapr1-dev
+
+
+ENV MESOS_CO_ROOT=/build/mesos GIT_VER=0.22.2.patched GIT_PATH=andrewrothstein-mesos-aa4508a
+
+RUN mkdir -p $MESOS_CO_ROOT
+RUN curl -L https://github.com/andrewrothstein/mesos/tarball/${GIT_VER} | tar zx -C $MESOS_CO_ROOT
+
+ENV MESOS_BUILD_ROOT=$MESOS_CO_ROOT/$GIT_PATH
+WORKDIR $MESOS_BUILD_ROOT
+RUN ./bootstrap
+
+ENV MESOS_BUILD_DIR=$MESOS_BUILD_ROOT/build
+RUN mkdir -p $MESOS_BUILD_DIR
+WORKDIR $MESOS_BUILD_DIR
+RUN ../configure && make install && rm -rf $MESOS_BUILD_ROOT
