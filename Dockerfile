@@ -33,3 +33,9 @@ ENV MESOS_BUILD_DIR=$MESOS_BUILD_ROOT/build
 RUN mkdir -p $MESOS_BUILD_DIR
 WORKDIR $MESOS_BUILD_DIR
 RUN ../configure && make install && rm -rf $MESOS_BUILD_ROOT
+
+# export environment
+ENV JAVA_HOME /usr/lib/jvm/java-6-openjdk-amd64
+
+# include libmesos on library path
+ENV LD_LIBRARY_PATH /usr/local/lib
