@@ -20,7 +20,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
   libapr1-dev
 
 
-ENV MESOS_CO_ROOT=/build/mesos GIT_VER=0.22.2.patched GIT_PATH=andrewrothstein-mesos-aa4508a
+ENV MESOS_CO_ROOT=/build/mesos GIT_VER=0.22.2.patched GIT_PATH=andrewrothstein-mesos-ee5f03a
 
 RUN mkdir -p $MESOS_CO_ROOT
 RUN curl -L https://github.com/andrewrothstein/mesos/tarball/${GIT_VER} | tar zx -C $MESOS_CO_ROOT
